@@ -325,7 +325,7 @@ powerbi-dataco-supply-chain-analytics/
 
 1. **Clone this repository:**
    ```bash
-   git clone https://github.com/<your-username>/powerbi-dataco-supply-chain-analytics.git
+   git clone https://github.com/<thunx280-ctrl>/powerbi-dataco-supply-chain-analytics.git
    ```
 2. **Download full raw dataset (if refreshing data model):**
    * The complete 96MB raw transactional CSV can be downloaded from [Kaggle: DataCo Smart Supply Chain Dataset](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis).
@@ -340,9 +340,9 @@ powerbi-dataco-supply-chain-analytics/
 
 * **Author:** **Nguyễn Xuân Thu**
 * **Role:** Data Analyst (Specializing in Operations Analytics, Supply Chain Intelligence & BI)
-* **Email:** *[your-email@example.com]*
-* **LinkedIn:** *[https://linkedin.com/in/your-profile]*
-* **GitHub:** *[https://github.com/your-username]*
+* **Email:** *[thu.nx280@gmail.com]*
+* **LinkedIn:** *[https://linkedin.com/]*
+* **GitHub:** *[https://github.com/thunx280-ctrl]*
 
 ---
 *⭐ If you find this project valuable for your supply chain analysis or evaluation, please consider starring the repository!*
