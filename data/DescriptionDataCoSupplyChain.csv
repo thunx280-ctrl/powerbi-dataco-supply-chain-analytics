@@ -1,0 +1,53 @@
+FIELDS,DESCRIPTION,,,Gi?i thích ti?ng Vi?t
+Type,:  Type of transaction made,,,L?u thông tin v? lo?i giao d?ch ?ã ???c th?c hi?n.
+Days for shipping (real)     ,:  Actual shipping days of the purchased product,,,S? ngày th?c t? c?n ?? giao s?n ph?m ?ã mua ??n khách hàng.
+Days for shipment (scheduled),:  Days of scheduled delivery of the purchased product,,,L?u s? ngày giao hàng d? ki?n theo l?ch c?a s?n ph?m ?ã mua.
+Benefit per order = Profit per Order,:  Earnings per order placed,,,Kho?n thu nh?p trên m?i ??n hàng ???c ??t.
+Sales per customer,:  Total sales per customer made per customer,,,L?u t?ng doanh s? c?a t?ng khách hàng.
+Delivery Status,":  Delivery status of orders: Advance shipping , Late delivery , Shipping canceled , Shipping on time",,,"Tr?ng thái giao hàng c?a ??n hàng, nh? giao s?m, giao tr?, b? h?y ho?c giao ?úng h?n."
+Late_delivery_risk           ,":  Categorical variable that indicates if sending is late (1), it is not late (0).",,,"Tr?ng thái cho bi?t ??n hàng có giao tr? hay không, trong ?ó 1 là giao tr? và 0 là không giao tr?."
+Category Id,:  Product category code,,,Mã danh m?c s?n ph?m dùng ?? xác ??nh nhóm ho?c lo?i c?a s?n ph?m.
+Category Name,:  Description of the product category,,,Tên danh m?c s?n ph?m.
+Customer City,:  City where the customer made the purchase,,,Thành ph? n?i khách hàng ?ã th?c hi?n mua hàng.
+Customer Country,:  Country where the customer made the purchase,,,Qu?c gia n?i khách hàng ?ã th?c hi?n mua hàng.
+Customer Email,:  Customer's email,,,L?u ??a ch? email c?a khách hàng.
+Customer Fname,:  Customer name,,,Dùng ?? l?u tên khách hàng.
+Customer Id,:  Customer ID,,,Mã ??nh danh c?a khách hàng trong h? th?ng.
+Customer Lname,:  Customer lastname,,,Tr??ng này dùng ?? l?u h? (h? tên cu?i) c?a khách hàng.
+Customer Password,:  Masked customer key,,,L?u khóa khách hàng ?ã ???c che/mask ?? b?o m?t thông tin.
+Customer Segment,":  Types of Customers: Consumer , Corporate , Home Office",,,"L?u thông tin phân khúc khách hàng nh? Consumer, Corporate ho?c Home Office."
+Customer State,:  State to which the store where the purchase is registered belongs,,,Bang/t?nh n?i c?a hàng ghi nh?n giao d?ch thu?c v?.
+Customer Street,:  Street to which the store where the purchase is registered belongs,,,L?u tên ???ng/ph? c?a c?a hàng n?i giao d?ch mua hàng ???c ghi nh?n.
+Customer Zipcode,:  Customer Zipcode,,,"Mã b?u chính c?a khách hàng, dùng ?? l?u thông tin khu v?c/??a ch? b?u ?i?n."
+Department Id,:  Department code of store,,,Mã phòng ban c?a c?a hàng.
+Department Name,:  Department name of store,,,L?u tên phòng ban c?a c?a hàng.
+Latitude,:  Latitude corresponding to location of store,,,V? ?? t??ng ?ng v?i v? trí c?a c?a hàng.
+Longitude,:  Longitude corresponding to location of store,,,Kinh ?? c?a v? trí c?a hàng.
+Market,":  Market to where the order is delivered : Africa , Europe , LATAM , Pacific Asia , USCA",,,"Khu v?c th? tr??ng mà ??n hàng ???c giao ??n, nh? Africa, Europe, LATAM, Pacific Asia ho?c USCA."
+Order City,:  Destination city of the order,,,"Thành ph? ?ích c?a ??n hàng, n?i ??n hàng s? ???c giao ??n."
+Order Country,:  Destination country of the order,,,Qu?c gia ?ích c?a ??n hàng.
+Order Customer Id,:  Customer order code,,,"Mã khách hàng c?a ??n hàng, dùng ?? nh?n di?n khách hàng liên quan ??n ??n hàng ?ó."
+order date (DateOrders),:  Date on which the order is made,,,Ngày ??n hàng ???c t?o/??t.
+Order Id,:  Order code,,,Mã ??n hàng dùng ?? ??nh danh ??n hàng trong h? th?ng.
+Order Item Cardprod Id = product id,:  Product code generated through the RFID reader,,,Mã s?n ph?m ???c t?o ra t? ??u ??c RFID.
+Order Item Discount,:  Order item discount value,,,L?u giá tr? chi?t kh?u c?a t?ng m?t hàng trong ??n hàng.
+Order Item Discount Rate     ,:  Order item discount percentage,,,L?u t? l? ph?n tr?m gi?m giá c?a t?ng m?t hàng trong ??n hàng.
+Order Item Id,:  Order item code,,,Mã c?a t?ng m?t hàng trong ??n hàng.
+Order Item Product Price     ,:  Price of products without discount,,,Giá c?a s?n ph?m trong ??n hàng tr??c khi gi?m giá.
+Order Item Profit Ratio,:  Order Item Profit Ratio,,,T? l? l?i nhu?n c?a t?ng m?t hàng trong ??n hàng.
+Order Item Quantity,:  Number of products per order,,,S? l??ng s?n ph?m trong m?i ??n hàng.
+Sales =sale per order,:  Value in sales,,,L?u giá tr? doanh s? bán hàng.
+Order Item Total  ,:  Total amount per order,,,L?u t?ng giá tr? ti?n c?a t?ng ??n hàng.
+Order Profit Per Order = Profit per Order,:  Order Profit Per Order,,,L?i nhu?n trên m?i ??n hàng.
+Order Region,":  Region of the world where the order is delivered :  Southeast Asia ,South Asia ,Oceania ,Eastern Asia, West Asia , West of USA , US Center , West Africa, Central Africa ,North Africa ,Western Europe ,Northern , Caribbean , South America ,East Africa ,Southern Europe , East of USA ,Canada ,Southern Africa , Central Asia ,  Europe , Central America, Eastern Europe , South of  USA ",,,L?u khu v?c ??a lý n?i ??n hàng ???c giao.
+Order State,:  State of the region where the order is delivered,,,T?nh/bang c?a khu v?c n?i ??n hàng ???c giao.
+Order Status,":  Order Status : COMPLETE , PENDING , CLOSED , PENDING_PAYMENT ,CANCELED , PROCESSING ,SUSPECTED_FRAUD ,ON_HOLD ,PAYMENT_REVIEW",,,"L?u tr?ng thái hi?n t?i c?a ??n hàng nh? hoàn t?t, ?ang x? lý, ch? thanh toán, ?ã h?y ho?c ?ang xem xét gian l?n."
+Product Card Id,:  Product code,,,L?u mã s?n ph?m ?? ??nh danh th? s?n ph?m.
+Product Category Id,:  Product category code,,,Mã danh m?c s?n ph?m.
+Product Description,:  Product Description,,,Tr??ng này dùng ?? l?u mô t? chi ti?t v? s?n ph?m.
+Product Image,:  Link of visit and purchase of the product,,,Tr??ng này l?u ???ng d?n ??n hình ?nh ho?c liên k?t c?a s?n ph?m ?? ph?c v? vi?c xem và mua hàng.
+Product Name,:  Product Name,,,Dùng ?? l?u tên c?a s?n ph?m.
+Product Price,:  Product Price,,,Dùng ?? l?u giá bán c?a s?n ph?m.
+Product Status,":  Status of the product stock :If it is 1 not available , 0 the product is available ",,,"Tr?ng thái t?n kho c?a s?n ph?m, trong ?ó 0 là còn hàng và 1 là không còn hàng."
+Shipping date (DateOrders)   ,:  Exact date and time of shipment,,,Ngày và gi? chính xác khi ??n hàng ???c v?n chuy?n.
+Shipping Mode,":  The following shipping modes are presented : Standard Class , First Class , Second Class , Same Day",,,"L?u thông tin ph??ng th?c v?n chuy?n c?a ??n hàng, nh? Standard Class, First Class, Second Class ho?c Same Day."

@@ -1,0 +1,22 @@
+# Power BI Temporary and Backup Files
+~$*
+*.tmp
+*.bak
+_archive/
+*.pbix
+!pbix/DataCo_Supply_Chain_Operations_Analytics.pbix
+
+# Large Raw Datasets (> 90MB - exceeds GitHub recommended size)
+Dataset/
+Dataset/*
+data/DataCoSupplyChainDataset.csv
+*.zip
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python cache
+__pycache__/
+*.py[cod]
