@@ -161,18 +161,28 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 ## 🚀 Prioritized Recommendations & Strategic Roadmap
 
 ```mermaid
-quadrantChart
-    title Risk Prioritization Matrix (Impact vs Urgency)
-    x-axis Low Commercial Exposure --> High Commercial Exposure
-    y-axis Low Delivery Risk Rate --> High Delivery Risk Rate
-    quadrant-1 Immediate SLA Renegotiation (First Class)
-    quadrant-2 Protect Core Flow (Fan Shop Delivery)
-    quadrant-3 Selective Diversification (Secondary Depts)
-    quadrant-4 Process Automation & Capacity (Standard Class)
-    "First Class SLA": [0.35, 0.95]
-    "Standard Class Volume": [0.85, 0.45]
-    "Fan Shop Core Revenue": [0.90, 0.55]
-    "AOV Basket Growth": [0.75, 0.30]
+flowchart TD
+    subgraph Matrix["🎯 Executive Risk & Action Prioritization Framework"]
+        direction TB
+        
+        subgraph Q1["🚨 P1: CRITICAL — Rate & Severity Risk"]
+            Q1_desc["<b>First Class Carrier Restructuring</b><br/>• 95.3% Late Delivery Rate<br/>• Renegotiate 3PL SLA & Expedited Promises"]
+        end
+
+        subgraph Q2["📦 P2: CRITICAL — Scale & Volume Risk"]
+            Q2_desc["<b>Standard Class Fulfillment Overhaul</b><br/>• 14,995 Late Orders ($8.4M Exposure)<br/>• Dispatch Automation & Dedicated Fast Lanes"]
+        end
+
+        subgraph Q3["💰 P3: HIGH — Growth Quality Risk"]
+            Q3_desc["<b>AOV & Basket Expansion Strategy</b><br/>• Reverse -8.5% AOV Contraction<br/>• Fan Shop Cross-Selling & Free-Shipping Tiers"]
+        end
+
+        subgraph Q4["🛡️ P4: MEDIUM — Dependency Risk"]
+            Q4_desc["<b>Revenue Base Diversification</b><br/>• Reduce 81% Concentration in Top 3 Depts<br/>• Scale Mid-Tier Lines (Footwear & Outdoors)"]
+        end
+    end
+
+    Q1 --> Q2 --> Q3 --> Q4
 ```
 
 | Priority | Strategic Initiative | Action Items | Expected Business Impact |
