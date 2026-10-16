@@ -43,30 +43,11 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 
 ## 🎯 Business Problem & Strategic Context
 
-```mermaid
-flowchart TD
-    A["Supply Chain Dilemma"] --> B["Commercial Degradation"]
-    A --> C["Fulfillment Vulnerability"]
-
-    B --> B1["AOV contracted -8.5% YoY<br/>Higher order volume fails to grow top-line"]
-    B --> B2["81% revenue dependent on Top 3 departments<br/>Vulnerable to consumer sentiment shifts"]
-
-    C --> C1["54.82% global late delivery rate<br/>$20M+ revenue exposed to fulfillment friction"]
-    C --> C2["First Class SLA failure (95.3% late)<br/>Carrier commitments broken on premium orders"]
-```
-
 ### Core Business Questions Answered:
 1. *Is company top-line expansion translating into healthy, profitable growth?*
 2. *Where do revenue and profitability originate, and how concentrated is commercial risk?*
 3. *Which shipping modes and geographic regions represent operational bottlenecks?*
 4. *How does delivery delay extend into core commercial revenue streams, and what actions should the executive committee prioritize?*
-
----
-
-## 🌐 Interactive Dashboard Live Demo
-
-🔗 **[Click Here to Explore the Interactive Dashboard on NovyPro](https://www.novypro.com/)** *(Live Demo Link)*  
-*(Experience full interactivity: slice by Market, drill down from Department into Categories, inspect the Sankey supply chain flow, and examine YoY growth scorecards).*
 
 ---
 
@@ -321,20 +302,6 @@ powerbi-dataco-supply-chain-analytics/
 
 ---
 
-## 💻 How to Reproduce & Open the Project
-
-1. **Clone this repository:**
-   ```bash
-   git clone https://github.com/<thunx280-ctrl>/powerbi-dataco-supply-chain-analytics.git
-   ```
-2. **Download full raw dataset (if refreshing data model):**
-   * The complete 96MB raw transactional CSV can be downloaded from [Kaggle: DataCo Smart Supply Chain Dataset](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis).
-   * Place `DataCoSupplyChainDataset.csv` into the `data/` folder.
-3. **Open the report:**
-   * Open `pbix/DataCo_Supply_Chain_Operations_Analytics.pbix` in [Power BI Desktop](https://powerbi.microsoft.com/desktop/).
-   * Update the file path in **Transform Data $\rightarrow$ Data source settings** if prompted.
-
----
 
 ## 👤 Author & Contact
 
