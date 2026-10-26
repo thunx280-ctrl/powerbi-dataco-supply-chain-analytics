@@ -217,32 +217,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 🚀 Prioritized Recommendations & Strategic Roadmap
-
-```mermaid
-flowchart TD
-    subgraph Matrix["🎯 Executive Risk & Action Prioritization Framework"]
-        direction TB
-        
-        subgraph Q1["🚨 P1: CRITICAL — Rate & Severity Risk"]
-            Q1_desc["<b>First Class Carrier Restructuring</b><br/>• 95.3% Late Delivery Rate<br/>• Renegotiate 3PL SLA & Expedited Promises"]
-        end
-
-        subgraph Q2["📦 P2: CRITICAL — Scale & Volume Risk"]
-            Q2_desc["<b>Standard Class Fulfillment Overhaul</b><br/>• 14,995 Late Orders ($8.4M Exposure)<br/>• Dispatch Automation & Dedicated Fast Lanes"]
-        end
-
-        subgraph Q3["💰 P3: HIGH — Growth Quality Risk"]
-            Q3_desc["<b>AOV & Basket Expansion Strategy</b><br/>• Reverse -8.5% AOV Contraction<br/>• Fan Shop Cross-Selling & Free-Shipping Tiers"]
-        end
-
-        subgraph Q4["🛡️ P4: MEDIUM — Dependency Risk"]
-            Q4_desc["<b>Revenue Base Diversification</b><br/>• Reduce 81% Concentration in Top 3 Depts<br/>• Scale Mid-Tier Lines (Footwear & Outdoors)"]
-        end
-    end
-
-    Q1 --> Q2 --> Q3 --> Q4
-```
+## 🚀 Prioritized Recommendations
 
 | Priority | Strategic Initiative | Action Items | Expected Business Impact |
 | :---: | :--- | :--- | :--- |
@@ -250,11 +225,6 @@ flowchart TD
 | **P2 - CRITICAL** | **Standard Class Fulfillment Overhaul** | Optimize warehouse dispatch throughput; establish dedicated fast-tracking lanes for high-volume standard parcels. | Reduce late order volume by 25–30%, safeguarding ~$2.5M in annual repeat business. |
 | **P3 - HIGH** | **AOV & Basket Expansion Strategy** | Introduce cross-category bundling (e.g., Fan Shop merchandise paired with Apparel items) and tiered free-shipping minimum thresholds. | Reverse the −8.5% AOV erosion, lifting total revenue without inflating operational unit costs. |
 | **P4 - MEDIUM** | **Selective Portfolio Diversification** | Strategically invest marketing and distribution resources into mid-tier departments (Footwear, Outdoors) to de-risk dependency on Fan Shop. | Rebalance revenue concentration so no single department exceeds 35% of total turnover. |
-
----
-
-## 🏗️ Data Architecture & Star Schema Modeling
-
 
 
 ---
