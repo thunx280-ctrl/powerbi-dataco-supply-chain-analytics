@@ -50,6 +50,84 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 4. *How does delivery delay extend into core commercial revenue streams, and what actions should the executive committee prioritize?*
 
 ---
+## 📖 2. Data Description & Modeling
+The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
+
+```mermaid
+erDiagram
+    Dim_Customer ||--o{ Fact_OrderLine : "1:N (Customer Id)"
+    Dim_Geography ||--o{ Fact_OrderLine : "1:N (Market / Order Region)"
+    Dim_Product ||--o{ Fact_OrderLine : "1:N (Product Card Id)"
+    Dim_Date ||--o{ Fact_OrderLine : "1:N (Order Date)"
+    Dim_Delivery ||--o{ Fact_OrderLine : "1:N (Shipping Mode)"
+```
+
+### Table Dimensions & Granularity:
+* **`Fact_OrderLine`:** 180,519 line items capturing unit quantity, sales, net profit, shipping days (real vs. scheduled), discount rates, and fulfillment status flags.
+* **`Dim_Customer`:** Master demographic table covering customer segments (Consumer, Corporate, Home Office), geographic origin, and unique identifiers.
+* **`Dim_Geography`:** Standardized geographical hierarchy (*Market $\rightarrow$ Order Region $\rightarrow$ Order Country $\rightarrow$ Order City*).
+* **`Dim_Product`:** Merchandising hierarchy (*Department $\rightarrow$ Category $\rightarrow$ Product Name*).
+* **`Dim_Delivery`:** Delivery mode specifications (*First Class, Same Day, Second Class, Standard Class*).
+* **`Dim_Date`:** Analytical calendar covering years 2015 to 2018 with full fiscal period hierarchies.
+
+```mermaid
+erDiagram
+    Dim_Customer ||--o{ Fact_OrderLine : "1:N (Customer Id)"
+    Dim_Geography ||--o{ Fact_OrderLine : "1:N (Order Region / City)"
+    Dim_Product ||--o{ Fact_OrderLine : "1:N (Product Card Id)"
+    Dim_Delivery ||--o{ Fact_OrderLine : "1:N (Shipping Mode)"
+    Dim_Date ||--o{ Fact_OrderLine : "1:N (Order Date)"
+
+    Fact_OrderLine {
+        int Order_Item_Id PK "Khóa chính dòng đơn hàng"
+        int Order_Id "Mã đơn hàng"
+        int Customer_Id FK "Mã khách hàng"
+        int Product_Card_Id FK "Mã sản phẩm"
+        date Order_Date FK "Ngày đặt hàng"
+        string Shipping_Mode FK "Phương thức vận chuyển"
+        float Sales "Doanh số dòng sản phẩm"
+        float Order_Item_Profit_Ratio "Biên lợi nhuận"
+        int Order_Item_Quantity "Số lượng sản phẩm"
+        int Days_for_shipping_real "Số ngày giao thực tế"
+        int Days_for_shipment_scheduled "Số ngày giao cam kết (SLA)"
+        int Late_delivery_risk "Cờ giao trễ (1 = Trễ, 0 = Đúng hạn)"
+    }
+
+    Dim_Customer {
+        int Customer_Id PK "Mã khách hàng"
+        string Customer_Fname "Tên khách hàng"
+        string Customer_Segment "Phân khúc (Consumer, Corporate, Home Office)"
+        string Customer_Country "Quốc gia khách hàng"
+    }
+
+    Dim_Geography {
+        string Order_City PK "Thành phố đặt hàng"
+        string Order_Country "Quốc gia nhận hàng"
+        string Order_Region "Khu vực địa lý"
+        string Market "Thị trường lớn (LATAM, Europe, USCA...)"
+    }
+
+    Dim_Product {
+        int Product_Card_Id PK "Mã sản phẩm"
+        string Product_Name "Tên sản phẩm"
+        string Category_Name "Danh mục sản phẩm"
+        string Department_Name "Ngành hàng (Fan Shop, Apparel, Golf...)"
+    }
+
+    Dim_Delivery {
+        string Shipping_Mode PK "Hình thức vận chuyển"
+        string Delivery_Status "Trạng thái giao (Late, Advance, On Time)"
+    }
+
+    Dim_Date {
+        date Date PK "Ngày"
+        int Year "Năm"
+        string Quarter "Quý"
+        int Month "Tháng"
+        string Month_Name "Tên tháng"
+    }
+```
+---
 
 ## 📊 Dashboard Architecture & Visuals
 
@@ -177,128 +255,7 @@ flowchart TD
 
 ## 🏗️ Data Architecture & Star Schema Modeling
 
-The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
-```mermaid
-erDiagram
-    Dim_Customer ||--o{ Fact_OrderLine : "1:N (Customer Id)"
-    Dim_Geography ||--o{ Fact_OrderLine : "1:N (Market / Order Region)"
-    Dim_Product ||--o{ Fact_OrderLine : "1:N (Product Card Id)"
-    Dim_Date ||--o{ Fact_OrderLine : "1:N (Order Date)"
-    Dim_Delivery ||--o{ Fact_OrderLine : "1:N (Shipping Mode)"
-```
-
-### Table Dimensions & Granularity:
-* **`Fact_OrderLine`:** 180,519 line items capturing unit quantity, sales, net profit, shipping days (real vs. scheduled), discount rates, and fulfillment status flags.
-* **`Dim_Customer`:** Master demographic table covering customer segments (Consumer, Corporate, Home Office), geographic origin, and unique identifiers.
-* **`Dim_Geography`:** Standardized geographical hierarchy (*Market $\rightarrow$ Order Region $\rightarrow$ Order Country $\rightarrow$ Order City*).
-* **`Dim_Product`:** Merchandising hierarchy (*Department $\rightarrow$ Category $\rightarrow$ Product Name*).
-* **`Dim_Delivery`:** Delivery mode specifications (*First Class, Same Day, Second Class, Standard Class*).
-* **`Dim_Date`:** Analytical calendar covering years 2015 to 2018 with full fiscal period hierarchies.
-
----
-
-## 🧮 Advanced DAX Formulations
-
-Below are core samples of the high-performance DAX measures authored for this solution:
-
-### 1. Late Delivery Rate Percentage
-```dax
-Late Delivery Rate % = 
-DIVIDE(
-    CALCULATE(
-        [Orders],
-        'Fact_OrderLine'[Late_delivery_risk] = 1
-    ),
-    [Orders],
-    0
-)
-```
-
-### 2. Commercial Late Revenue Exposure
-```dax
-Late Revenue = 
-CALCULATE(
-    [Revenue],
-    'Fact_OrderLine'[Late_delivery_risk] = 1
-)
-
-Late Revenue % = 
-DIVIDE(
-    [Late Revenue],
-    [Revenue],
-    0
-)
-```
-
-### 3. Average Delay Days (Conditional Variance)
-```dax
-Avg Delivery Delay Days = 
-AVERAGEX(
-    FILTER(
-        'Fact_OrderLine',
-        'Fact_OrderLine'[Days for shipping (real)] > 'Fact_OrderLine'[Days for shipment (scheduled)]
-    ),
-    'Fact_OrderLine'[Days for shipping (real)] - 'Fact_OrderLine'[Days for shipment (scheduled)]
-)
-```
-
-### 4. Year-over-Year (YoY) AOV Growth Percentage
-```dax
-AOV YoY % = 
-VAR _CurrentAOV = [Avg Order Value (AOV)]
-VAR _PriorYearAOV = 
-    CALCULATE(
-        [Avg Order Value (AOV)],
-        SAMEPERIODLASTYEAR('Dim_Date'[Date])
-    )
-RETURN
-    DIVIDE(_CurrentAOV - _PriorYearAOV, _PriorYearAOV, 0)
-```
-
-### 5. Dynamic YoY Card Label (UI Formatting)
-```dax
-AOV Label YoY = 
-VAR _YoY = [AOV YoY %]
-RETURN
-    IF(
-        ISBLANK(_YoY),
-        "- vs LY",
-        IF(
-            _YoY >= 0,
-            "▲ +" & FORMAT(_YoY, "0.0%") & " vs LY",
-            "▼ " & FORMAT(_YoY, "0.0%") & " vs LY"
-        )
-    )
-```
-
----
-
-## 📁 Repository Structure
-
-```
-powerbi-dataco-supply-chain-analytics/
-├── assets/
-│   ├── dashboards/               # High-resolution screenshots of each dashboard page
-│   │   ├── 01_Executive_Overview.png
-│   │   ├── 02_Business_Drivers.png
-│   │   ├── 03_Operations_Delivery.png
-│   │   └── 04_Insight_Recommendations.png
-│   ├── icons/                    # Custom UI icons for navigation and KPI cards
-│   └── model/                    # Star Schema diagram screenshots
-├── data/
-│   ├── data_dictionary.md        # Comprehensive data dictionary and metadata
-│   ├── DescriptionDataCoSupplyChain.csv # Column mapping specifications
-│   └── sample_DataCoSupplyChainDataset.csv # 1,000-row sample for schema preview
-├── docs/
-│   ├── design_thinking_framework.md # 5W1H, COO Empathy map, and Dual Northstars
-│   ├── Design Thinking_DataCoSupplyChain.xlsx # Original Design Thinking workbook
-│   └── PowerBI - Final Project (Project 4).docx # Academic project brief
-├── pbix/
-│   └── DataCo_Supply_Chain_Operations_Analytics.pbix # Official Final Power BI report
-├── .gitignore                    # Excludes 90MB+ raw CSVs, temporary files, and backups
-└── README.md                     # Executive portfolio documentation
-```
 
 ---
 
