@@ -10,9 +10,9 @@
 ---
 
 ## 📌 Table of Contents
-1. [Background & Business Context](#-1-background--business-context)
+1. [Background & Business Context](#-1-background--overview)
 2. [Design Thinking Process](#-2-design-thinking-process)
-3. [Data Architecture & Modeling](#-3-data-architecture--modeling)
+3. [Data Description & Modeling](#-3-data-description--modeling)
 4. [Dashboard Architecture & Visuals](#-4-dashboard-architecture--visuals)
 5. [In-Depth Business Insights & Evidence](#-5-in-depth-business-insights--evidence)
 6. [Prioritized Recommendations](#-6-prioritized-recommendations)
