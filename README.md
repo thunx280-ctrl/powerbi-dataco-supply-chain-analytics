@@ -10,17 +10,13 @@
 ---
 
 ## 📌 Table of Contents
-1. [Executive Summary](#-executive-summary)
-2. [Business Problem & Strategic Context](#-business-problem--strategic-context)
-3. [Interactive Dashboard Live Demo](#-interactive-dashboard-live-demo)
-4. [Dashboard Architecture & Visuals](#-dashboard-architecture--visuals)
-5. [In-Depth Business Insights & Evidence](#-in-depth-business-insights--evidence)
-6. [Prioritized Recommendations & Strategic Roadmap](#-prioritized-recommendations--strategic-roadmap)
-7. [Data Architecture & Star Schema Modeling](#-data-architecture--star-schema-modeling)
-8. [Advanced DAX Formulations](#-advanced-dax-formulations)
-9. [Repository Structure](#-repository-structure)
-10. [How to Reproduce & Open the Project](#-how-to-reproduce--open-the-project)
-11. [Author & Contact](#-author--contact)
+1. [Background & Business Context](#-1-background--business-context)
+2. [Design Thinking Process](#-2-design-thinking-process)
+3. [Data Architecture & Modeling](#-3-data-architecture--modeling)
+4. [Dashboard Architecture & Visuals](#-4-dashboard-architecture--visuals)
+5. [In-Depth Business Insights & Evidence](#-5-in-depth-business-insights--evidence)
+6. [Prioritized Recommendations](#-6-prioritized-recommendations)
+7. [Author & Contact](#-7-author--contact)
 
 ---
 
@@ -51,7 +47,7 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 
 ---
 
-### 🧠 Design Thinking Process
+### 🧠 2. Design Thinking Process
 
 #### Stage 1: Empathize (5W1H)
 <img width="3045" height="1732" alt="stage_1_empathize" src="https://github.com/user-attachments/assets/2792daf3-6579-4c3e-ac4a-5409138df5a0" />
@@ -64,15 +60,15 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 
 #### 
 ---
-## 📖 2. Data Description & Modeling
+## 📖 3. Data Description & Modeling
 The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
-### 2.1. Data Source & Scale
+### 3.1. Data Source & Scale
 - **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) dataset on Kaggle.
 - **Scale**: **180,519 transactional records** with 53 raw attributes spanning from **January 2015 through January 2018**.
 - **Scope**: Covers the end-to-end commercial supply chain lifecycle: omnichannel sales transactions, customer demographics, multi-tier product catalog hierarchy, 5 global macro trade markets, logistics shipping modes, and SLA delivery tracking.
   
-### 2.2. Data Modeling (Star Schema)
+### 3.2. Data Modeling (Star Schema)
 
 To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
 
@@ -90,7 +86,7 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 ![Power BI Star Schema Data Model](assets/data_model_erd.png)
 
 ---
-### 2.3. Table Data Dictionary
+### 3.3. Table Data Dictionary
 
 
 <details>
@@ -197,7 +193,7 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 </details>
 ---
 
-## 📊 3. Dashboard Architecture & Visuals
+## 📊 4. Dashboard Architecture & Visuals
 
 The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Tooltips**:
 
@@ -247,7 +243,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 💡 4. In-Depth Business Insights & Evidence
+## 💡 5. In-Depth Business Insights & Evidence
 
 ### 🔍 Insight 1 — Growth Quality: Higher Volume Fails to Translate into Revenue Expansion
 * **Evidence (2017 vs. 2016):**
@@ -285,7 +281,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 🚀 5. Prioritized Recommendations
+## 🚀 6. Prioritized Recommendations
 
 | Priority | Strategic Initiative | Action Items | Expected Business Impact |
 | :---: | :--- | :--- | :--- |
@@ -296,7 +292,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 👤 6. Author & Contact
+## 👤 7. Author & Contact
 
 * **Author:** **Nguyễn Xuân Thu**
 * **Role:** Data Analyst (Specializing in Operations Analytics, Supply Chain Intelligence & BI)
