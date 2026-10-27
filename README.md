@@ -50,6 +50,20 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 4. *How does delivery delay extend into core commercial revenue streams, and what actions should the executive committee prioritize?*
 
 ---
+
+### 🧠 Design Thinking Process
+
+#### Stage 1: Empathize (5W1H)
+<img width="3045" height="1732" alt="stage_1_empathize" src="https://github.com/user-attachments/assets/2792daf3-6579-4c3e-ac4a-5409138df5a0" />
+
+#### Stage 2: Define Point of View
+<img width="3045" height="1732" alt="stage_2_define_pov" src="https://github.com/user-attachments/assets/8182aa47-2d6c-456c-a2e3-f1d117aec012" />
+
+#### Stage 3: Ideate
+<img width="3045" height="1732" alt="stage_3_ideate" src="https://github.com/user-attachments/assets/32a6f312-e6ca-46e5-8613-f7edf0be04d1" />
+
+#### 
+---
 ## 📖 2. Data Description & Modeling
 The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
@@ -62,10 +76,6 @@ The original flat table (180k rows $\times$ 53 columns) was normalized into an e
 
 To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
 
-![Power BI Star Schema Data Model](assets/data_model_erd.png)
-
-### 2.3. Table Data Dictionary
-
 #### 📌 Star Schema Table Architecture
 
 | Table Name | Type | Granularity | Role & Relationship Key |
@@ -77,7 +87,11 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | **`Dim_Delivery`** | **Dimension** | 1 row per shipping profile (`Ship id`) | Defines shipping mode, carrier SLA delivery status, and late delivery risk. Joins to Fact on `Ship id` = `Ship id`. |
 | **`Dim_Geography`** | **Dimension** | 1 row per destination profile (`Geography id`) | Establishes regional hierarchies (City $\rightarrow$ State $\rightarrow$ Country $\rightarrow$ Region $\rightarrow$ Market) and GPS coordinates. Joins to Fact on `Geography id` = `Geography id`. |
 
+![Power BI Star Schema Data Model](assets/data_model_erd.png)
+
 ---
+### 2.3. Table Data Dictionary
+
 
 <details>
      <summary> <b>1. Fact Table: Fact_OrderLine</b></summary>
@@ -183,7 +197,7 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 </details>
 ---
 
-## 📊 Dashboard Architecture & Visuals
+## 📊 3. Dashboard Architecture & Visuals
 
 The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Tooltips**:
 
@@ -233,7 +247,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 💡 In-Depth Business Insights & Evidence
+## 💡 4. In-Depth Business Insights & Evidence
 
 ### 🔍 Insight 1 — Growth Quality: Higher Volume Fails to Translate into Revenue Expansion
 * **Evidence (2017 vs. 2016):**
@@ -271,7 +285,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 🚀 Prioritized Recommendations
+## 🚀 5. Prioritized Recommendations
 
 | Priority | Strategic Initiative | Action Items | Expected Business Impact |
 | :---: | :--- | :--- | :--- |
@@ -282,7 +296,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 
 ---
 
-## 👤 Author & Contact
+## 👤 6. Author & Contact
 
 * **Author:** **Nguyễn Xuân Thu**
 * **Role:** Data Analyst (Specializing in Operations Analytics, Supply Chain Intelligence & BI)
