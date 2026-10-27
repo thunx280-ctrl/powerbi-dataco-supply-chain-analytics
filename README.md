@@ -24,7 +24,7 @@
 
 ---
 
-## 🏢 Executive Summary
+## 🏢 1. Background & Overview
 
 Global supply chain operations require balancing two competing mandates: **commercial growth** and **operational fulfillment reliability**. When logistics SLAs degrade, customer lifetime value declines and hard-won market share is rapidly eroded.
 
@@ -41,7 +41,7 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 
 ---
 
-## 🎯 Business Problem & Strategic Context
+### 🎯 Business Problem & Strategic Context
 
 ### Core Business Questions Answered:
 1. *Is company top-line expansion translating into healthy, profitable growth?*
@@ -54,7 +54,7 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
 ### 2.1. Data Source & Scale
-- **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) benchmark dataset on Kaggle, documented via [`DescriptionDataCoSupplyChain.csv`](./data/DescriptionDataCoSupplyChain.csv).
+- **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) dataset on Kaggle.
 - **Scale**: **180,519 transactional records** with 53 raw attributes spanning from **January 2015 through January 2018**.
 - **Scope**: Covers the end-to-end commercial supply chain lifecycle: omnichannel sales transactions, customer demographics, multi-tier product catalog hierarchy, 5 global macro trade markets, logistics shipping modes, and SLA delivery tracking.
   
@@ -280,9 +280,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 | **P3 - HIGH** | **AOV & Basket Expansion Strategy** | Introduce cross-category bundling (e.g., Fan Shop merchandise paired with Apparel items) and tiered free-shipping minimum thresholds. | Reverse the −8.5% AOV erosion, lifting total revenue without inflating operational unit costs. |
 | **P4 - MEDIUM** | **Selective Portfolio Diversification** | Strategically invest marketing and distribution resources into mid-tier departments (Footwear, Outdoors) to de-risk dependency on Fan Shop. | Rebalance revenue concentration so no single department exceeds 35% of total turnover. |
 
-
 ---
-
 
 ## 👤 Author & Contact
 
