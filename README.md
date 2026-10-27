@@ -58,12 +58,13 @@ The original flat table (180k rows $\times$ 53 columns) was normalized into an e
 - **Scale**: **180,519 transactional records** with 53 raw attributes spanning from **January 2015 through January 2018**.
 - **Scope**: Covers the end-to-end commercial supply chain lifecycle: omnichannel sales transactions, customer demographics, multi-tier product catalog hierarchy, 5 global macro trade markets, logistics shipping modes, and SLA delivery tracking.
   
-### 2.2. Kimball Dimensional Model (Star Schema ERD)
+### 2.2. Data Modeling (Star Schema)
 
 To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
-![Power BI Star Schema Data Model](assets/model/data_model_erd.png)
 
-### 2.3. Table-by-Table Data Dictionary
+![Power BI Star Schema Data Model](assets/data_model_erd.png)
+
+### 2.3. Table Data Dictionary
 
 #### 📌 Star Schema Table Architecture
 
@@ -78,7 +79,8 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 
 ---
 
-#### 1. Fact Table: `Fact OrderLine`
+<details>
+     <summary> <b>1. Fact Table: Fact_OrderLine</b></summary>
 *Contains 180,519 transactional line items spanning global operations.*
 
 | Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
@@ -103,10 +105,11 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Order Item Profit Ratio` | `Decimal` | - | **Order Item Profit Ratio**: Profit margin ratio per line item: `[Order Profit] / [Sales]`. |
 | `Days for shipping (real)` | `Integer` | - | **Actual shipping days of the purchased product**: Elapsed transit days from dispatch to delivery. |
 | `Days for shipment (scheduled)` | `Integer` | - | **Days of scheduled delivery of the purchased product**: Contractually committed delivery days (SLA). |
-
+</details>
 ---
 
-#### 2. Dimension Table: `Dim_Product`
+<details>
+     <summary> <b>2. Dimension Table: Dim_Product</b></summary>
 *Catalogs 118 commercial products across 50 categories and 10 executive departments.*
 
 | Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
@@ -117,10 +120,11 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Category Name` | `Text` | - | **Description of product category**: Sub-category name (*Cleats, Men's Footwear, Cardio Equipment, Women's Apparel...*). |
 | `Department Name` | `Text` | - | **Department name of store**: Business department (*Fan Shop, Apparel, Golf, Footwear, Outdoors, Fitness...*). |
 | `Product Status` | `Integer` | - | **Status of product stock**: Inventory availability flag (`0` = Product is available, `1` = Not available / Discontinued). |
-
+</details>
 ---
 
-#### 3. Dimension Table: `Dim_Customer`
+<details>
+     <summary> <b>3. Dimension Table: Dim_Customer</b></summary>
 *Manages customer identity and behavioral segmentation across 20,652 unique accounts.*
 
 | Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
@@ -128,10 +132,11 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Customer Id` | `Integer` | **PK** | **Customer ID**: Unique customer identification number joining to `Fact OrderLine`[`Order Customer Id`]. |
 | `Customer Name` | `Text` | - | **Customer Name**: Full name derived from customer first name (`Customer Fname`) and last name (`Customer Lname`). |
 | `Customer Segment` | `Text` | - | **Types of Customers**: Customer market classification: *Consumer* (52%), *Corporate* (30%), or *Home Office* (18%). |
-
+</details>
 ---
 
-#### 4. Dimension Table: `Dim_Date`
+<details>
+     <summary> <b>4. Dimension Table: Dim_Date</b></summary>
 *Dedicated calendar dimension supporting Time Intelligence calculations.*
 
 | Field Name | Data Type | Key | Description & Business Logic |
@@ -145,10 +150,11 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Quarter` | `Text` | - | **Quarter**: Fiscal quarter string (*Q1, Q2, Q3, Q4*). |
 | `QuaterNum` | `Integer` | - | **Quarter Number**: Numeric fiscal quarter index from 1 to 4. |
 | `Week` | `Integer` | - | **Week Number**: Numeric week of the year (1 - 53). |
-
+</details>
 ---
 
-#### 5. Dimension Table: `Dim_Delivery`
+<details>
+     <summary> <b>5. Dimension Table: Dim_Delivery</b></summary>
 *Standardized delivery carrier modes and contractual service-level agreements (SLA).*
 
 | Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
@@ -157,10 +163,11 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Shipping Mode` | `Text` | - | **Shipping modes presented**: 4 logistics carrier transit options: *Standard Class, First Class, Second Class, Same Day*. |
 | `Delivery Status` | `Text` | - | **Delivery status of orders**: Categorical fulfillment state: *Late delivery, Advance shipping, Shipping on time, Shipping canceled*. |
 | `Late_delivery_risk` | `Integer` | - | **Late Delivery Indicator**: Binary flag indicating SLA breach: `1` = Delivery is late (`real > scheduled`), `0` = Delivery is not late. |
-
+</details>
 ---
 
-#### 6. Dimension Table: `Dim_Geography`
+<details>
+     <summary> <b>6. TDimension Table: Dim_Geography</b></summary>
 *Geographic destination mapping across 5 global trade markets.*
 
 | Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
@@ -173,7 +180,7 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Market` | `Text` | - | **Market to where the order is delivered**: 5 global trading blocks: *Africa, Europe, LATAM, Pacific Asia, USCA*. |
 | `Latitude` | `Decimal` | - | **Latitude**: Exact geographic coordinate of store/destination location. |
 | `Longitude` | `Decimal` | - | **Longitude**: Exact geographic coordinate of store/destination location. |
-
+</details>
 ---
 
 ## 📊 Dashboard Architecture & Visuals
