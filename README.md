@@ -57,92 +57,13 @@ The original flat table (180k rows $\times$ 53 columns) was normalized into an e
 - **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) benchmark dataset on Kaggle, documented via [`DescriptionDataCoSupplyChain.csv`](./data/DescriptionDataCoSupplyChain.csv).
 - **Scale**: **180,519 transactional records** with 53 raw attributes spanning from **January 2015 through January 2018**.
 - **Scope**: Covers the end-to-end commercial supply chain lifecycle: omnichannel sales transactions, customer demographics, multi-tier product catalog hierarchy, 5 global macro trade markets, logistics shipping modes, and SLA delivery tracking.
-
+  
 ### 2.2. Kimball Dimensional Model (Star Schema ERD)
 
 To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
-
 ![Power BI Star Schema Data Model](assets/model/data_model_erd.png)
 
-```mermaid
-erDiagram
-    Dim_Product ||--o{ "Fact OrderLine" : "1:N (Product Card Id = Order Item Cardprod Id)"
-    Dim_Customer ||--o{ "Fact OrderLine" : "1:N (Customer Id = Order Customer Id)"
-    Dim_Date ||--o{ "Fact OrderLine" : "1:N (Date = order date (DateOrders))"
-    Dim_Delivery ||--o{ "Fact OrderLine" : "1:N (Ship id = Ship id)"
-    Dim_Geography ||--o{ "Fact OrderLine" : "1:N (Geography id = Geography id)"
-
-    "Fact OrderLine" {
-        int Order_Item_Id PK "Order item code (Mã từng mặt hàng)"
-        int Order_Id "Order code (Mã đơn hàng tổng)"
-        string Type "Type of transaction (DEBIT, TRANSFER, PAYMENT, CASH)"
-        date order_date_DateOrders FK "Date order is placed (Liên kết Dim_Date)"
-        date shipping_date_DateOrders "Actual shipping date and time"
-        int Order_Customer_Id FK "Customer code (Liên kết Dim_Customer)"
-        int Order_Item_Cardprod_Id FK "Product RFID code (Liên kết Dim_Product)"
-        int Ship_id FK "Fulfillment key (Liên kết Dim_Delivery)"
-        int Geography_id FK "Destination key (Liên kết Dim_Geography)"
-        string Order_Status "Order lifecycle status (COMPLETE, FRAUD...)"
-        int Order_Item_Quantity "Number of products per order"
-        decimal Order_Item_Product_Price "Product price without discount"
-        decimal Order_Item_Discount "Order item discount value ($)"
-        decimal Order_Item_Discount_Rate "Order item discount percentage"
-        decimal Sales "Actual net sales value per item ($)"
-        decimal Sales_per_customer "Aggregated sales made per customer ($)"
-        decimal Order_Profit_Per_Order "Net profit per order ($)"
-        decimal Order_Item_Profit_Ratio "Profit margin ratio per item"
-        int Days_for_shipping_real "Actual shipping transit days"
-        int Days_for_shipment_scheduled "Scheduled delivery SLA days"
-    }
-
-    Dim_Product {
-        int Product_Card_Id PK "Product code / RFID (Khóa chính sản phẩm)"
-        string Product_Name "Product commercial name"
-        int Product_Category_Id "Product category code"
-        string Category_Name "Product category description"
-        string Department_Name "Department name of store"
-        int Product_Status "Stock status (0: Available, 1: Out of Stock)"
-    }
-
-    Dim_Customer {
-        int Customer_Id PK "Customer ID (Khóa chính khách hàng)"
-        string Customer_Name "Customer full name (Họ và tên)"
-        string Customer_Segment "Customer type: Consumer, Corporate, Home Office"
-    }
-
-    Dim_Date {
-        date Date PK "Calendar date (YYYY-MM-DD)"
-        int Day "Day of month (1-31)"
-        string Month "Month name (January, February...)"
-        int Month_Num "Month sequence number (1-12)"
-        string Month_Year "Formatted month and year (e.g. Jan 2016)"
-        int MonthYearNum "Numeric sort key (YYYYMM)"
-        string Quarter "Fiscal quarter string (Q1-Q4)"
-        int QuaterNum "Fiscal quarter number (1-4)"
-        int Week "Week number of year"
-    }
-
-    Dim_Delivery {
-        int Ship_id PK "Surrogate shipping key (Khóa chính vận chuyển)"
-        string Shipping_Mode "Shipping modes: Standard, First, Second, Same Day"
-        string Delivery_Status "Status: Advance shipping, Late delivery, Shipping on time..."
-        int Late_delivery_risk "Late flag: 1 = Late, 0 = Not Late"
-    }
-
-    Dim_Geography {
-        int Geography_id PK "Surrogate location key (Khóa chính địa lý)"
-        string Order_City "Destination city of the order"
-        string Order_State "State / province where order is delivered"
-        string Order_Country "Destination country of the order"
-        string Order_Region "Geographic world region (Western Europe, LATAM...)"
-        string Market "Macro market: Africa, Europe, LATAM, Pacific Asia, USCA"
-        decimal Latitude "Latitude coordinate of location"
-        decimal Longitude "Longitude coordinate of location"
-    }
-```
-
 ### 2.3. Table-by-Table Data Dictionary
-*(Fully aligned with the completed analytical data model and [`DescriptionDataCoSupplyChain.csv`](./data/DescriptionDataCoSupplyChain.csv))*
 
 #### 📌 Star Schema Table Architecture
 
