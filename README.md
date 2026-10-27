@@ -53,80 +53,206 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 ## 📖 2. Data Description & Modeling
 The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
-```mermaid
-erDiagram
-    Dim_Customer ||--o{ Fact_OrderLine : "1:N (Customer Id)"
-    Dim_Geography ||--o{ Fact_OrderLine : "1:N (Market / Order Region)"
-    Dim_Product ||--o{ Fact_OrderLine : "1:N (Product Card Id)"
-    Dim_Date ||--o{ Fact_OrderLine : "1:N (Order Date)"
-    Dim_Delivery ||--o{ Fact_OrderLine : "1:N (Shipping Mode)"
-```
+### 2.1. Data Source & Scale
+- **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) benchmark dataset on Kaggle, documented via [`DescriptionDataCoSupplyChain.csv`](./data/DescriptionDataCoSupplyChain.csv).
+- **Scale**: **180,519 transactional records** with 53 raw attributes spanning from **January 2015 through January 2018**.
+- **Scope**: Covers the end-to-end commercial supply chain lifecycle: omnichannel sales transactions, customer demographics, multi-tier product catalog hierarchy, 5 global macro trade markets, logistics shipping modes, and SLA delivery tracking.
 
-### Table Dimensions & Granularity:
-* **`Fact_OrderLine`:** 180,519 line items capturing unit quantity, sales, net profit, shipping days (real vs. scheduled), discount rates, and fulfillment status flags.
-* **`Dim_Customer`:** Master demographic table covering customer segments (Consumer, Corporate, Home Office), geographic origin, and unique identifiers.
-* **`Dim_Geography`:** Standardized geographical hierarchy (*Market $\rightarrow$ Order Region $\rightarrow$ Order Country $\rightarrow$ Order City*).
-* **`Dim_Product`:** Merchandising hierarchy (*Department $\rightarrow$ Category $\rightarrow$ Product Name*).
-* **`Dim_Delivery`:** Delivery mode specifications (*First Class, Same Day, Second Class, Standard Class*).
-* **`Dim_Date`:** Analytical calendar covering years 2015 to 2018 with full fiscal period hierarchies.
+### 2.2. Kimball Dimensional Model (Star Schema ERD)
+
+To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
+
+![Power BI Star Schema Data Model](assets/model/data_model_erd.png)
 
 ```mermaid
 erDiagram
-    Dim_Customer ||--o{ Fact_OrderLine : "1:N (Customer Id)"
-    Dim_Geography ||--o{ Fact_OrderLine : "1:N (Order Region / City)"
-    Dim_Product ||--o{ Fact_OrderLine : "1:N (Product Card Id)"
-    Dim_Delivery ||--o{ Fact_OrderLine : "1:N (Shipping Mode)"
-    Dim_Date ||--o{ Fact_OrderLine : "1:N (Order Date)"
+    Dim_Product ||--o{ "Fact OrderLine" : "1:N (Product Card Id = Order Item Cardprod Id)"
+    Dim_Customer ||--o{ "Fact OrderLine" : "1:N (Customer Id = Order Customer Id)"
+    Dim_Date ||--o{ "Fact OrderLine" : "1:N (Date = order date (DateOrders))"
+    Dim_Delivery ||--o{ "Fact OrderLine" : "1:N (Ship id = Ship id)"
+    Dim_Geography ||--o{ "Fact OrderLine" : "1:N (Geography id = Geography id)"
 
-    Fact_OrderLine {
-        int Order_Item_Id PK "Khóa chính dòng đơn hàng"
-        int Order_Id "Mã đơn hàng"
-        int Customer_Id FK "Mã khách hàng"
-        int Product_Card_Id FK "Mã sản phẩm"
-        date Order_Date FK "Ngày đặt hàng"
-        string Shipping_Mode FK "Phương thức vận chuyển"
-        float Sales "Doanh số dòng sản phẩm"
-        float Order_Item_Profit_Ratio "Biên lợi nhuận"
-        int Order_Item_Quantity "Số lượng sản phẩm"
-        int Days_for_shipping_real "Số ngày giao thực tế"
-        int Days_for_shipment_scheduled "Số ngày giao cam kết (SLA)"
-        int Late_delivery_risk "Cờ giao trễ (1 = Trễ, 0 = Đúng hạn)"
-    }
-
-    Dim_Customer {
-        int Customer_Id PK "Mã khách hàng"
-        string Customer_Fname "Tên khách hàng"
-        string Customer_Segment "Phân khúc (Consumer, Corporate, Home Office)"
-        string Customer_Country "Quốc gia khách hàng"
-    }
-
-    Dim_Geography {
-        string Order_City PK "Thành phố đặt hàng"
-        string Order_Country "Quốc gia nhận hàng"
-        string Order_Region "Khu vực địa lý"
-        string Market "Thị trường lớn (LATAM, Europe, USCA...)"
+    "Fact OrderLine" {
+        int Order_Item_Id PK "Order item code (Mã từng mặt hàng)"
+        int Order_Id "Order code (Mã đơn hàng tổng)"
+        string Type "Type of transaction (DEBIT, TRANSFER, PAYMENT, CASH)"
+        date order_date_DateOrders FK "Date order is placed (Liên kết Dim_Date)"
+        date shipping_date_DateOrders "Actual shipping date and time"
+        int Order_Customer_Id FK "Customer code (Liên kết Dim_Customer)"
+        int Order_Item_Cardprod_Id FK "Product RFID code (Liên kết Dim_Product)"
+        int Ship_id FK "Fulfillment key (Liên kết Dim_Delivery)"
+        int Geography_id FK "Destination key (Liên kết Dim_Geography)"
+        string Order_Status "Order lifecycle status (COMPLETE, FRAUD...)"
+        int Order_Item_Quantity "Number of products per order"
+        decimal Order_Item_Product_Price "Product price without discount"
+        decimal Order_Item_Discount "Order item discount value ($)"
+        decimal Order_Item_Discount_Rate "Order item discount percentage"
+        decimal Sales "Actual net sales value per item ($)"
+        decimal Sales_per_customer "Aggregated sales made per customer ($)"
+        decimal Order_Profit_Per_Order "Net profit per order ($)"
+        decimal Order_Item_Profit_Ratio "Profit margin ratio per item"
+        int Days_for_shipping_real "Actual shipping transit days"
+        int Days_for_shipment_scheduled "Scheduled delivery SLA days"
     }
 
     Dim_Product {
-        int Product_Card_Id PK "Mã sản phẩm"
-        string Product_Name "Tên sản phẩm"
-        string Category_Name "Danh mục sản phẩm"
-        string Department_Name "Ngành hàng (Fan Shop, Apparel, Golf...)"
+        int Product_Card_Id PK "Product code / RFID (Khóa chính sản phẩm)"
+        string Product_Name "Product commercial name"
+        int Product_Category_Id "Product category code"
+        string Category_Name "Product category description"
+        string Department_Name "Department name of store"
+        int Product_Status "Stock status (0: Available, 1: Out of Stock)"
     }
 
-    Dim_Delivery {
-        string Shipping_Mode PK "Hình thức vận chuyển"
-        string Delivery_Status "Trạng thái giao (Late, Advance, On Time)"
+    Dim_Customer {
+        int Customer_Id PK "Customer ID (Khóa chính khách hàng)"
+        string Customer_Name "Customer full name (Họ và tên)"
+        string Customer_Segment "Customer type: Consumer, Corporate, Home Office"
     }
 
     Dim_Date {
-        date Date PK "Ngày"
-        int Year "Năm"
-        string Quarter "Quý"
-        int Month "Tháng"
-        string Month_Name "Tên tháng"
+        date Date PK "Calendar date (YYYY-MM-DD)"
+        int Day "Day of month (1-31)"
+        string Month "Month name (January, February...)"
+        int Month_Num "Month sequence number (1-12)"
+        string Month_Year "Formatted month and year (e.g. Jan 2016)"
+        int MonthYearNum "Numeric sort key (YYYYMM)"
+        string Quarter "Fiscal quarter string (Q1-Q4)"
+        int QuaterNum "Fiscal quarter number (1-4)"
+        int Week "Week number of year"
+    }
+
+    Dim_Delivery {
+        int Ship_id PK "Surrogate shipping key (Khóa chính vận chuyển)"
+        string Shipping_Mode "Shipping modes: Standard, First, Second, Same Day"
+        string Delivery_Status "Status: Advance shipping, Late delivery, Shipping on time..."
+        int Late_delivery_risk "Late flag: 1 = Late, 0 = Not Late"
+    }
+
+    Dim_Geography {
+        int Geography_id PK "Surrogate location key (Khóa chính địa lý)"
+        string Order_City "Destination city of the order"
+        string Order_State "State / province where order is delivered"
+        string Order_Country "Destination country of the order"
+        string Order_Region "Geographic world region (Western Europe, LATAM...)"
+        string Market "Macro market: Africa, Europe, LATAM, Pacific Asia, USCA"
+        decimal Latitude "Latitude coordinate of location"
+        decimal Longitude "Longitude coordinate of location"
     }
 ```
+
+### 2.3. Table-by-Table Data Dictionary
+*(Fully aligned with the completed analytical data model and [`DescriptionDataCoSupplyChain.csv`](./data/DescriptionDataCoSupplyChain.csv))*
+
+#### 📌 Star Schema Table Architecture
+
+| Table Name | Type | Granularity | Role & Relationship Key |
+| :--- | :---: | :--- | :--- |
+| **`Fact OrderLine`** | **Fact** | 1 row per ordered product item (`Order Item Id`) | Central transaction fact capturing financial metrics, order quantities, transit days, and fulfillment statuses. Joins to all 5 dimension tables on surrogate/natural foreign keys. |
+| **`Dim_Product`** | **Dimension** | 1 row per unique product SKU (`Product Card Id`) | Catalogs product specifications, merchandise category, department, and stock status. Joins to Fact on `Product Card Id` = `Order Item Cardprod Id`. |
+| **`Dim_Customer`** | **Dimension** | 1 row per unique customer (`Customer Id`) | Stores customer profile, full name, and market segment. Joins to Fact on `Customer Id` = `Order Customer Id`. |
+| **`Dim_Date`** | **Dimension** | 1 row per calendar day (`Date`) | Governs Time Intelligence logic (YoY, MoM, YTD) across fiscal hierarchies. Joins to Fact on `Date` = `order date (DateOrders)`. |
+| **`Dim_Delivery`** | **Dimension** | 1 row per shipping profile (`Ship id`) | Defines shipping mode, carrier SLA delivery status, and late delivery risk. Joins to Fact on `Ship id` = `Ship id`. |
+| **`Dim_Geography`** | **Dimension** | 1 row per destination profile (`Geography id`) | Establishes regional hierarchies (City $\rightarrow$ State $\rightarrow$ Country $\rightarrow$ Region $\rightarrow$ Market) and GPS coordinates. Joins to Fact on `Geography id` = `Geography id`. |
+
+---
+
+#### 1. Fact Table: `Fact OrderLine`
+*Contains 180,519 transactional line items spanning global operations.*
+
+| Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
+| :--- | :---: | :---: | :--- |
+| `Order Item Id` | `Integer` | **PK** | **Order item code**: Unique surrogate identifier for each distinct product item in an order. |
+| `Order Id` | `Integer` | - | **Order code**: Header order identifier linking multiple item rows into one customer purchase order. |
+| `Type` | `Text` | - | **Type of transaction made**: Payment method used (`DEBIT`, `TRANSFER`, `PAYMENT`, `CASH`). |
+| `order date (DateOrders)` | `Date` | **FK** | **Date on which the order is made**: Purchase timestamp joining to `Dim_Date`[`Date`]. |
+| `shipping date (DateOrders)` | `Date` | - | **Exact date and time of shipment**: Actual timestamp when items were dispatched. |
+| `Order Customer Id` | `Integer` | **FK** | **Customer order code**: Identifier joining to `Dim_Customer`[`Customer Id`]. |
+| `Order Item Cardprod Id` | `Integer` | **FK** | **Product code generated through RFID reader**: Identifier joining to `Dim_Product`[`Product Card Id`]. |
+| `Ship id` | `Integer` | **FK** | **Surrogate Shipping Key**: Identifier joining to `Dim_Delivery`[`Ship id`]. |
+| `Geography id` | `Integer` | **FK** | **Surrogate Location Key**: Identifier joining to `Dim_Geography`[`Geography id`]. |
+| `Order Status` | `Text` | - | **Current lifecycle status of order**: `COMPLETE`, `PENDING`, `CLOSED`, `PENDING_PAYMENT`, `CANCELED`, `PROCESSING`, `SUSPECTED_FRAUD`, `ON_HOLD`, `PAYMENT_REVIEW`. |
+| `Order Item Quantity` | `Integer` | - | **Number of products per order**: Total units purchased per line item. |
+| `Order Item Product Price` | `Decimal` | - | **Price of products without discount**: Baseline unit retail price before promotional discount. |
+| `Order Item Discount` | `Decimal` | - | **Order item discount value**: Dollar discount deducted from gross value ($ USD). |
+| `Order Item Discount Rate` | `Decimal` | - | **Order item discount percentage**: Effective promotional percentage applied (0.00 – 0.25). |
+| `Sales` | `Decimal` | - | **Value in sales (Sale per order)**: Net revenue realized per line item after deducting discounts ($ USD). |
+| `Sales per customer` | `Decimal` | - | **Total sales made per customer**: Cumulative sales aggregated per customer account ($ USD). |
+| `Order Profit Per Order` | `Decimal` | - | **Earnings per order placed (Benefit per order)**: Net operating profit generated per line item ($ USD). |
+| `Order Item Profit Ratio` | `Decimal` | - | **Order Item Profit Ratio**: Profit margin ratio per line item: `[Order Profit] / [Sales]`. |
+| `Days for shipping (real)` | `Integer` | - | **Actual shipping days of the purchased product**: Elapsed transit days from dispatch to delivery. |
+| `Days for shipment (scheduled)` | `Integer` | - | **Days of scheduled delivery of the purchased product**: Contractually committed delivery days (SLA). |
+
+---
+
+#### 2. Dimension Table: `Dim_Product`
+*Catalogs 118 commercial products across 50 categories and 10 executive departments.*
+
+| Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
+| :--- | :---: | :---: | :--- |
+| `Product Card Id` | `Integer` | **PK** | **Product code**: Unique RFID product code joining to `Fact OrderLine`[`Order Item Cardprod Id`]. |
+| `Product Name` | `Text` | - | **Product Name**: Full commercial name of the merchandise item. |
+| `Product Category Id` | `Integer` | - | **Product category code**: Numeric identifier for the product category. |
+| `Category Name` | `Text` | - | **Description of product category**: Sub-category name (*Cleats, Men's Footwear, Cardio Equipment, Women's Apparel...*). |
+| `Department Name` | `Text` | - | **Department name of store**: Business department (*Fan Shop, Apparel, Golf, Footwear, Outdoors, Fitness...*). |
+| `Product Status` | `Integer` | - | **Status of product stock**: Inventory availability flag (`0` = Product is available, `1` = Not available / Discontinued). |
+
+---
+
+#### 3. Dimension Table: `Dim_Customer`
+*Manages customer identity and behavioral segmentation across 20,652 unique accounts.*
+
+| Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
+| :--- | :---: | :---: | :--- |
+| `Customer Id` | `Integer` | **PK** | **Customer ID**: Unique customer identification number joining to `Fact OrderLine`[`Order Customer Id`]. |
+| `Customer Name` | `Text` | - | **Customer Name**: Full name derived from customer first name (`Customer Fname`) and last name (`Customer Lname`). |
+| `Customer Segment` | `Text` | - | **Types of Customers**: Customer market classification: *Consumer* (52%), *Corporate* (30%), or *Home Office* (18%). |
+
+---
+
+#### 4. Dimension Table: `Dim_Date`
+*Dedicated calendar dimension supporting Time Intelligence calculations.*
+
+| Field Name | Data Type | Key | Description & Business Logic |
+| :--- | :---: | :---: | :--- |
+| `Date` | `Date` | **PK** | **Calendar Date**: Continuous daily dates (`YYYY-MM-DD`) joining to `Fact OrderLine`[`order date (DateOrders)`]. |
+| `Day` | `Integer` | - | **Day of the month**: Day number ranging from 1 to 31. |
+| `Month` | `Text` | - | **Month Name**: Full name of the month (*January, February, March...*). |
+| `Month Num` | `Integer` | - | **Month Number**: Sequential month number from 1 to 12. |
+| `Month-Year` | `Text` | - | **Month and Year**: Standard reporting string (e.g., `Jan 2016`, `Jul 2017`). |
+| `MonthYearNum` | `Integer` | - | **Month-Year Sort Key**: Integer key used to sort chronological displays correctly (`YYYYMM`, e.g., `201601`). |
+| `Quarter` | `Text` | - | **Quarter**: Fiscal quarter string (*Q1, Q2, Q3, Q4*). |
+| `QuaterNum` | `Integer` | - | **Quarter Number**: Numeric fiscal quarter index from 1 to 4. |
+| `Week` | `Integer` | - | **Week Number**: Numeric week of the year (1 - 53). |
+
+---
+
+#### 5. Dimension Table: `Dim_Delivery`
+*Standardized delivery carrier modes and contractual service-level agreements (SLA).*
+
+| Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
+| :--- | :---: | :---: | :--- |
+| `Ship id` | `Integer` | **PK** | **Surrogate Shipping Key**: Unique identifier joining to `Fact OrderLine`[`Ship id`]. |
+| `Shipping Mode` | `Text` | - | **Shipping modes presented**: 4 logistics carrier transit options: *Standard Class, First Class, Second Class, Same Day*. |
+| `Delivery Status` | `Text` | - | **Delivery status of orders**: Categorical fulfillment state: *Late delivery, Advance shipping, Shipping on time, Shipping canceled*. |
+| `Late_delivery_risk` | `Integer` | - | **Late Delivery Indicator**: Binary flag indicating SLA breach: `1` = Delivery is late (`real > scheduled`), `0` = Delivery is not late. |
+
+---
+
+#### 6. Dimension Table: `Dim_Geography`
+*Geographic destination mapping across 5 global trade markets.*
+
+| Field Name | Data Type | Key | Description from `DescriptionDataCoSupplyChain.csv` & Business Logic |
+| :--- | :---: | :---: | :--- |
+| `Geography id` | `Integer` | **PK** | **Surrogate Location Key**: Unique geographic destination key joining to `Fact OrderLine`[`Geography id`]. |
+| `Order City` | `Text` | - | **Destination city of the order**: Destination city where the package is delivered. |
+| `Order State` | `Text` | - | **State of region where order is delivered**: Destination administrative state or province. |
+| `Order Country` | `Text` | - | **Destination country of the order**: Destination sovereign country name. |
+| `Order Region` | `Text` | - | **Region of the world where order is delivered**: Specific world geographic zone (*Southeast Asia, Western Europe, South America, Central America...*). |
+| `Market` | `Text` | - | **Market to where the order is delivered**: 5 global trading blocks: *Africa, Europe, LATAM, Pacific Asia, USCA*. |
+| `Latitude` | `Decimal` | - | **Latitude**: Exact geographic coordinate of store/destination location. |
+| `Longitude` | `Decimal` | - | **Longitude**: Exact geographic coordinate of store/destination location. |
+
 ---
 
 ## 📊 Dashboard Architecture & Visuals
