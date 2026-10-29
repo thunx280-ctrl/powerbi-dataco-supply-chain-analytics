@@ -27,9 +27,9 @@ Global supply chain operations require balancing two competing mandates: **comme
 This project delivers a **comprehensive Operations Control Tower** built for the **Chief Operations Officer (COO)** of DataCo Global. Leveraging an enterprise transactional dataset of **180,519 records** across global territories (LATAM, Europe, USCA, Pacific Asia, Africa), the solution establishes unified visibility across order processing, logistics lead times, delivery fulfillment, and product margin performance.
 
 ### 🌟 Headline Findings:
-* **Total Business Scale:** **$36.78M Total Revenue** and **$3.98M Profit** across 65,000+ customer orders.
+* **Total Business Scale:** **\$36.78M Total Revenue** and **\$3.98M Profit** across 65,000+ customer orders.
 * **The Growth Quality Paradox (2017 vs. 2016):** While order volume grew by **+4.8%**, overall revenue dropped by **−4.0%** because Average Order Value (AOV) plummeted by **−8.5%**.
-* **High Revenue Concentration:** **81% of total global revenue** is concentrated in just 3 departments (*Fan Shop $17.1M, Apparel $8.0M, Golf $4.6M*).
+* **High Revenue Concentration:** **81% of total global revenue** is concentrated in just 3 departments (*Fan Shop \$17.1M, Apparel \$8.0M, Golf \$4.6M*).
 * **Delivery Reliability Crisis:** **54.82% of all orders are delivered late**, exposing **54.71% of total gross revenue** (~$20M+) to severe customer dissatisfaction risk.
 * **Dual-Risk Logistics Profile:**
   * **Rate Risk (Severity):** *First Class* has a staggering **95.3% late delivery rate**.
@@ -61,7 +61,7 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 #### 
 ---
 ## 📖 3. Data Description & Modeling
-The original flat table (180k rows $\times$ 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
+The original flat table (180k rows × 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
 ### 3.1. Data Source & Scale
 - **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) dataset on Kaggle.
@@ -81,7 +81,7 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | **`Dim_Customer`** | **Dimension** | 1 row per unique customer (`Customer Id`) | Stores customer profile, full name, and market segment. Joins to Fact on `Customer Id` = `Order Customer Id`. |
 | **`Dim_Date`** | **Dimension** | 1 row per calendar day (`Date`) | Governs Time Intelligence logic (YoY, MoM, YTD) across fiscal hierarchies. Joins to Fact on `Date` = `order date (DateOrders)`. |
 | **`Dim_Delivery`** | **Dimension** | 1 row per shipping profile (`Ship id`) | Defines shipping mode, carrier SLA delivery status, and late delivery risk. Joins to Fact on `Ship id` = `Ship id`. |
-| **`Dim_Geography`** | **Dimension** | 1 row per destination profile (`Geography id`) | Establishes regional hierarchies (City $\rightarrow$ State $\rightarrow$ Country $\rightarrow$ Region $\rightarrow$ Market) and GPS coordinates. Joins to Fact on `Geography id` = `Geography id`. |
+| **`Dim_Geography`** | **Dimension** | 1 row per destination profile (`Geography id`) | Establishes regional hierarchies (City → State → Country → Region → Market) and GPS coordinates. Joins to Fact on `Geography id` = `Geography id`. |
 
 ![Power BI Star Schema Data Model](assets/data_model_erd.png)
 
@@ -225,7 +225,7 @@ The report comprises **4 Strategic Pages** and **Dynamic Micro-Interaction Toolt
 ### 3. Page 3: Delivery & Operational Performance
 * **Purpose:** Granular inspection of logistics lead times, carrier compliance, and bottleneck isolation.
 * **Key Visuals:**
-  * **Sankey Supply Chain Flow:** Mapping order flow from Origin Markets $\rightarrow$ Shipping Modes $\rightarrow$ Delivery Fulfillment Status.
+  * **Sankey Supply Chain Flow:** Mapping order flow from Origin Markets → Shipping Modes → Delivery Fulfillment Status.
   * **Dumbbell Chart (Scheduled vs. Real Days):** Visualizing the variance gap between SLA commitments and physical delivery days.
   * **Late Delivery Exposure by Shipping Mode:** Contrasting rate severity against absolute financial exposure.
   * **Geographic Risk Map:** Pinpointing recipient countries experiencing severe fulfillment lag.
