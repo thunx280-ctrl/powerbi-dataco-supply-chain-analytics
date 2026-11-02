@@ -11,8 +11,8 @@
 
 ## 📌 Table of Contents
 1. [Background & Business Context](#-1-background--overview)
-2. [Design Thinking Process](#-2-design-thinking-process)
-3. [Data Description & Modeling](#-3-data-description--modeling)
+2. [Data Description & Modeling](#-2-data-description--modeling)
+3. [Design Thinking Process](#-3-design-thinking-process)
 4. [Dashboard Architecture & Visuals](#-4-dashboard-architecture--visuals)
 5. [In-Depth Business Insights & Evidence](#-5-in-depth-business-insights--evidence)
 6. [Prioritized Recommendations](#-6-prioritized-recommendations)
@@ -47,48 +47,15 @@ This project delivers a **comprehensive Operations Control Tower** built for the
 
 ---
 
-### 🧠 2. Design Thinking Process
-
-#### Stage 1: Empathize (5W1H)
-<img width="3045" height="1732" alt="stage_1_empathize" src="https://github.com/user-attachments/assets/2792daf3-6579-4c3e-ac4a-5409138df5a0" />
-
-#### Stage 2: Define Point of View
-<img width="3045" height="1732" alt="stage_2_define_pov" src="https://github.com/user-attachments/assets/8182aa47-2d6c-456c-a2e3-f1d117aec012" />
-
-#### Stage 3: Ideate
-<img width="3045" height="1732" alt="stage_3_ideate" src="https://github.com/user-attachments/assets/32a6f312-e6ca-46e5-8613-f7edf0be04d1" />
-
-#### 
----
-## 📖 3. Data Description & Modeling
+## 📖 2. Data Description & Modeling
 The original flat table (180k rows × 53 columns) was normalized into an enterprise **Star Schema** to ensure high DAX evaluation speed and intuitive report navigation:
 
-### 3.1. Data Source & Scale
+### 2.1. Data Source & Scale
 - **Source**: [DataCo Smart Supply Chain for Big Data Analysis](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis) dataset on Kaggle.
 - **Scale**: **180,519 transactional records** with 53 raw attributes spanning from **January 2015 through January 2018**.
 - **Scope**: Covers the end-to-end commercial supply chain lifecycle: omnichannel sales transactions, customer demographics, multi-tier product catalog hierarchy, 5 global macro trade markets, logistics shipping modes, and SLA delivery tracking.
-  
-### 3.2. Data Modeling (Star Schema)
 
-To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
-
-#### 📌 Star Schema Table Architecture
-
-| Table Name | Type | Granularity | Role & Relationship Key |
-| :--- | :---: | :--- | :--- |
-| **`Fact OrderLine`** | **Fact** | 1 row per ordered product item (`Order Item Id`) | Central transaction fact capturing financial metrics, order quantities, transit days, and fulfillment statuses. Joins to all 5 dimension tables on surrogate/natural foreign keys. |
-| **`Dim_Product`** | **Dimension** | 1 row per unique product SKU (`Product Card Id`) | Catalogs product specifications, merchandise category, department, and stock status. Joins to Fact on `Product Card Id` = `Order Item Cardprod Id`. |
-| **`Dim_Customer`** | **Dimension** | 1 row per unique customer (`Customer Id`) | Stores customer profile, full name, and market segment. Joins to Fact on `Customer Id` = `Order Customer Id`. |
-| **`Dim_Date`** | **Dimension** | 1 row per calendar day (`Date`) | Governs Time Intelligence logic (YoY, MoM, YTD) across fiscal hierarchies. Joins to Fact on `Date` = `order date (DateOrders)`. |
-| **`Dim_Delivery`** | **Dimension** | 1 row per shipping profile (`Ship id`) | Defines shipping mode, carrier SLA delivery status, and late delivery risk. Joins to Fact on `Ship id` = `Ship id`. |
-| **`Dim_Geography`** | **Dimension** | 1 row per destination profile (`Geography id`) | Establishes regional hierarchies (City → State → Country → Region → Market) and GPS coordinates. Joins to Fact on `Geography id` = `Geography id`. |
-
-![Power BI Star Schema Data Model](assets/data_model_erd.png)
-
----
-### 3.3. Table Data Dictionary
-
-
+### 2.2. Data Dictionary
 <details>
      <summary> <b>1. Fact Table: Fact_OrderLine</b></summary>
 *Contains 180,519 transactional line items spanning global operations.*
@@ -191,6 +158,35 @@ To eliminate data redundancy, prevent circular relationship paths, and optimize 
 | `Latitude` | `Decimal` | - | **Latitude**: Exact geographic coordinate of store/destination location. |
 | `Longitude` | `Decimal` | - | **Longitude**: Exact geographic coordinate of store/destination location. |
 </details>
+
+---
+### 🧠 3. Design Thinking Process
+
+#### Stage 1: Empathize (5W1H)
+<img width="3045" height="1732" alt="stage_1_empathize" src="https://github.com/user-attachments/assets/2792daf3-6579-4c3e-ac4a-5409138df5a0" />
+
+#### Stage 2: Define Point of View
+<img width="3045" height="1732" alt="stage_2_define_pov" src="https://github.com/user-attachments/assets/8182aa47-2d6c-456c-a2e3-f1d117aec012" />
+
+#### Stage 3: Ideate
+<img width="3045" height="1732" alt="stage_3_ideate" src="https://github.com/user-attachments/assets/32a6f312-e6ca-46e5-8613-f7edf0be04d1" />
+
+### 2.3. Data Modeling (Star Schema)
+
+To eliminate data redundancy, prevent circular relationship paths, and optimize DAX calculation performance, the flat transaction dataset was transformed in Power Query into an enterprise **Star Schema (1 Fact Table + 5 Dimension Tables)**. All relationships maintain **1-to-Many (`1:*`) cardinality** with **Single Cross-Filter Direction** flowing strictly from Dimensions down to the Fact table:
+
+#### 📌 Star Schema Table Architecture
+
+| Table Name | Type | Granularity | Role & Relationship Key |
+| :--- | :---: | :--- | :--- |
+| **`Fact OrderLine`** | **Fact** | 1 row per ordered product item (`Order Item Id`) | Central transaction fact capturing financial metrics, order quantities, transit days, and fulfillment statuses. Joins to all 5 dimension tables on surrogate/natural foreign keys. |
+| **`Dim_Product`** | **Dimension** | 1 row per unique product SKU (`Product Card Id`) | Catalogs product specifications, merchandise category, department, and stock status. Joins to Fact on `Product Card Id` = `Order Item Cardprod Id`. |
+| **`Dim_Customer`** | **Dimension** | 1 row per unique customer (`Customer Id`) | Stores customer profile, full name, and market segment. Joins to Fact on `Customer Id` = `Order Customer Id`. |
+| **`Dim_Date`** | **Dimension** | 1 row per calendar day (`Date`) | Governs Time Intelligence logic (YoY, MoM, YTD) across fiscal hierarchies. Joins to Fact on `Date` = `order date (DateOrders)`. |
+| **`Dim_Delivery`** | **Dimension** | 1 row per shipping profile (`Ship id`) | Defines shipping mode, carrier SLA delivery status, and late delivery risk. Joins to Fact on `Ship id` = `Ship id`. |
+| **`Dim_Geography`** | **Dimension** | 1 row per destination profile (`Geography id`) | Establishes regional hierarchies (City → State → Country → Region → Market) and GPS coordinates. Joins to Fact on `Geography id` = `Geography id`. |
+
+![Power BI Star Schema Data Model](assets/data_model_erd.png)
 ---
 
 ## 📊 4. Dashboard Architecture & Visuals
